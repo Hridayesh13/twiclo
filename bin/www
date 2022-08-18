@@ -1,0 +1,10 @@
+#!/usr/bin/env node
+
+// var app = require('../app');
+var myapp = require('../myapp');
+
+var http = require('http');
+
+// http.createServer(app).listen(3000, "127.0.0.1");
+http.createServer(myapp).listen(3000, "127.0.0.1");
+console.log('Server running at http://127.0.0.1:3000/');
