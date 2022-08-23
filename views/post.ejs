@@ -1,0 +1,63 @@
+<div
+	class="modal fade"
+	id="composePost"
+	tabindex="-1"
+	aria-labelledby="exampleModalLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Compose</h5>
+				<button
+					type="button"
+					class="btn-close"
+					data-bs-dismiss="modal"
+					aria-label="Close"
+				></button>
+			</div>
+			<div class="modal-body">
+				<div class="form-group">
+					<label for="exampleTextarea" class="form-label"></label>
+
+					<form id="formPost" action="/compose/post" method="POST">
+						<div class="form-group form-floating">
+							<textarea
+								class="form-control required"
+								placeholder="Type here ..."
+								id="floatingTextarea2"
+								name="post_Text"
+								style="height: 100px"
+							></textarea>
+							<label for="floatingTextarea2">Post</label>
+						</div>
+						<div class="mb-3">
+							<label for="formFileMultiple" class="form-label">
+								Add image(s)
+							</label>
+							<input
+								class="form-control"
+								type="file"
+								id="formFileMultiple"
+								name="images"
+								multiple
+							/>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="submit" form="formPost" class="btn btn-primary">
+					Post
+				</button>
+				<button
+					type="button"
+					class="btn btn-secondary"
+					data-bs-dismiss="modal"
+				>
+					Discard
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
