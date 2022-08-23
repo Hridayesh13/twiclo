@@ -15,10 +15,10 @@ router.get("/compose/post", ensureAuthenticated, (req, res) =>
 );
 
 router.post("/compose/post", ensureAuthenticated, (req, res) => {
-	const { post_Text, images } = req.body;
+	const { post_Text, image } = req.body;
 	let newPost = {
 		text: post_Text,
-		attachments: images,
+		attachments: image,
 		author_id: req.user.id,
 		possibly_sensitive: false,
 	};
