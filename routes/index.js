@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const { ensureAuthenticated, forwardAuthenticated } = require("../config/auth");
 
+const db = require("../config/db.js");
+
 router.get("/", forwardAuthenticated, (req, res) => res.render("welcome"));
 
 router.get("/home", ensureAuthenticated, (req, res) =>
@@ -10,19 +12,35 @@ router.get("/home", ensureAuthenticated, (req, res) =>
 	})
 );
 
-router.get("/compose/post", ensureAuthenticated, (req, res) =>
-	res.render("post")
-);
+// router.get("/compose/post", ensureAuthenticated, (req, res) =>
+// 	res.render("compose/post")
+// );
 
 router.post("/compose/post", ensureAuthenticated, (req, res) => {
-	const { post_Text, image } = req.body;
+	let { post_Text, possibly_sensitive } = req.body;
+
+	if (possibly_sensitive === "on") {
+		possibly_sensitive = 1;
+	} else {
+		possibly_sensitive = 0;
+	}
+
 	let newPost = {
 		text: post_Text,
-		attachments: image,
+		// attachments: image,
 		author_id: req.user.id,
-		possibly_sensitive: false,
+		possibly_sensitive: possibly_sensitive,
 	};
-	res.send(newPost);
+
+	let sql = "INSERT INTO posts SET ?";
+
+	let query = db.query(sql, newPost, (err) => {
+		if (err) throw err;
+		console.log("post successful");
+		req.flash("success_msg", "Posted successfully");
+		res.redirect("/home");
+		// res.send(newPost);
+	});
 });
 
 module.exports = router;

@@ -30,8 +30,13 @@
 								style="height: 100px"
 							></textarea>
 							<label for="floatingTextarea2">Post</label>
+							<div id="character-counter">
+								<span id="typed-characters">0</span>
+								<span>/</span>
+								<span id="maximum-characters">280</span>
+							</div>
 						</div>
-						<div class="mb-3">
+						<!-- <div class="mb-3">
 							<label for="formFileSingle" class="form-label">
 								Add image (optional)
 							</label>
@@ -41,12 +46,33 @@
 								id="formFileSingle"
 								name="image"
 							/>
-						</div>
+						</div> -->
+						<fieldset class="form-group">
+							<legend class="mt-4">Switches</legend>
+							<div class="form-check form-switch">
+								<input
+									class="form-check-input"
+									type="checkbox"
+									id="flexSwitchCheckDefault"
+									name="possibly_sensitive"
+								/>
+								<label
+									class="form-check-label"
+									for="flexSwitchCheckDefault"
+									>Sensitive content</label
+								>
+							</div>
+						</fieldset>
 					</form>
 				</div>
 			</div>
 			<div class="modal-footer">
-				<button type="submit" form="formPost" class="btn btn-primary">
+				<button
+					type="submit"
+					id="postButton"
+					form="formPost"
+					class="btn btn-primary"
+				>
 					Post
 				</button>
 				<button
