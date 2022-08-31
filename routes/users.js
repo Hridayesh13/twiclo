@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const passport = require("passport");
+const { ensureAuthenticated, forwardAuthenticated } = require("../config/auth");
 
 const db = require("../config/db.js");
 
@@ -99,6 +100,19 @@ router.get("/logout", (req, res, next) => {
 		req.flash("success_msg", "You are logged out");
 		res.redirect("/users/login");
 	});
+});
+
+router.get("/:id", ensureAuthenticated, (req, res) => {
+	db.query(
+		`SELECT * FROM posts where author_id = ${req.params.id}`,
+		(err, result, fields) => {
+			if (err) throw err;
+			res.render("profile", {
+				user: req.user,
+				posts: result,
+			});
+		}
+	);
 });
 
 module.exports = router;

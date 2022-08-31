@@ -1,0 +1,31 @@
+<h1 class="mt-5">Profile</h1>
+<p class="lead mb-3">Welcome <%= user.name %></p>
+<a href="/home" class="btn btn-info">Go Home</a>
+<br /><br />
+<% for(let i=0; i < posts.length; i++) {%>
+<div class="card text-white bg-info mb-3" style="max-width: 30rem">
+    <a href="/users/:id/posts/:postId" display: block height: 100% ></a>
+    <div class="card-header">
+        <%= posts[i].author_id %>
+        <ul class="nav nav-pills justify-content-end">
+           
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">...</a>
+              <div class="dropdown-menu">
+                <!-- <a class=" btn btn-danger" href="/posts/:postId/delete" >Delete Post</a> -->
+                <a class=" btn btn-danger" href="" >Delete Post</a>
+              </div>
+            </li>
+           
+          </ul>
+    </div>
+    <div class="card-body">
+        <!-- <h4 class="card-title">...title</h4> -->
+        <p class="card-text"><%= posts[i].text %></p>
+    </div>
+    <div class="card-footer"><%= posts[i].created_at %></div>
+    
+</div>
+<% } %>
+
+<a href="/users/logout" class="btn btn-danger">Logout</a>

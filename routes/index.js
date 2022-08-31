@@ -6,11 +6,16 @@ const db = require("../config/db.js");
 
 router.get("/", forwardAuthenticated, (req, res) => res.render("welcome"));
 
-router.get("/home", ensureAuthenticated, (req, res) =>
-	res.render("home", {
-		user: req.user,
-	})
-);
+router.get("/home", ensureAuthenticated, (req, res) => {
+	db.query(`SELECT * FROM posts`, (err, result, fields) => {
+		if (err) throw err;
+		// res.write(result);
+		res.render("home", {
+			user: req.user,
+			posts: result,
+		});
+	});
+});
 
 // router.get("/compose/post", ensureAuthenticated, (req, res) =>
 // 	res.render("compose/post")

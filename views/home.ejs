@@ -1,5 +1,8 @@
 <h1 class="mt-5">Home</h1>
-<p class="lead mb-3">Welcome <%= user.name %></p>
+<p class="lead mb-3">
+	Welcome
+	<a class="btn btn-info" href="/users/<%= user.id %>"><%= user.name %></a>
+</p>
 
 <%- include ("partials/messages") %>
 
@@ -25,32 +28,20 @@
 <!-- Modal -->
 <%- include ("compose/post") %>
 
-<a href="/users/logout" class="btn btn-secondary">Logout</a>
+<a href="/users/logout" class="btn btn-danger">Logout</a>
 
-<script>
-	const textAreaElement = document.querySelector("#floatingTextarea2");
-	console.log(textAreaElement);
+<br /><br />
+<% for(let i=0; i < posts.length; i++) {%>
+<div class="card text-white bg-info mb-3" style="max-width: 20rem">
+	<div class="card-header"><%= posts[i].author_id %></div>
+	<div class="card-body">
+		<!-- <h4 class="card-title">...title</h4> -->
+		<p class="card-text"><%= posts[i].text %></p>
+	</div>
+	<div class="card-footer">
+		<h6><%= posts[i].created_at %></h6>
+	</div>
+</div>
+<% } %>
 
-	const characterCounterElement =
-		document.querySelector("#character-counter");
-
-	const typedCharactersElement = document.querySelector("#typed-characters");
-
-	const maximumCharacters = 280;
-
-	textAreaElement.addEventListener("keydown", (event) => {
-		const typedCharacters = textAreaElement.value.length;
-
-		typedCharactersElement.textContent = typedCharacters;
-
-		if (typedCharacters >= 220 && typedCharacters <= 280) {
-			characterCounterElement.classList = "text-warning";
-			document.getElementById("postButton").disabled = false;
-		} else if (typedCharacters > 280) {
-			characterCounterElement.classList = "text-danger";
-			document.getElementById("postButton").disabled = true;
-			// document.getElementById("postButtonSpan").title =
-			// 	"at most 280 characters";
-		}
-	});
-</script>
+<script src="/javascripts/char-counter.js"></script>
