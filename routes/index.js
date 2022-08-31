@@ -7,21 +7,24 @@ const db = require("../config/db.js");
 router.get("/", forwardAuthenticated, (req, res) => res.render("welcome"));
 
 router.get("/home", ensureAuthenticated, (req, res) => {
-	db.query(`SELECT * FROM posts`, (err, result, fields) => {
-		if (err) throw err;
-		// res.write(result);
-		res.render("home", {
-			user: req.user,
-			posts: result,
-		});
-	});
+	db.query(
+		`SELECT * FROM posts ORDER BY created_at DESC`,
+		(err, result, fields) => {
+			if (err) throw err;
+			// res.write(result);
+			res.render("home", {
+				user: req.user,
+				posts: result,
+			});
+		}
+	);
 });
 
 // router.get("/compose/post", ensureAuthenticated, (req, res) =>
 // 	res.render("compose/post")
 // );
 
-router.post("/compose/post", ensureAuthenticated, (req, res) => {
+router.post("/post", ensureAuthenticated, (req, res) => {
 	let { post_Text, possibly_sensitive } = req.body;
 
 	if (possibly_sensitive === "on") {

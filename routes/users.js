@@ -104,7 +104,7 @@ router.get("/logout", (req, res, next) => {
 
 router.get("/:id", ensureAuthenticated, (req, res) => {
 	db.query(
-		`SELECT * FROM posts where author_id = ${req.params.id}`,
+		`SELECT * FROM posts where author_id = ${req.params.id} ORDER BY created_at DESC`,
 		(err, result, fields) => {
 			if (err) throw err;
 			res.render("profile", {
@@ -114,5 +114,20 @@ router.get("/:id", ensureAuthenticated, (req, res) => {
 		}
 	);
 });
+
+router.post(
+	"/:id/posts/:postId/delete",
+	ensureAuthenticated,
+	(req, res, next) => {
+		let sql = `DELETE FROM posts WHERE post_id=${req.params.postId}`;
+
+		db.query(sql, (err) => {
+			if (err) throw err;
+			console.log("deleted successfully");
+			req.flash("success_msg", "Post Deleted");
+			res.redirect(`/users/${req.params.id}`);
+		});
+	}
+);
 
 module.exports = router;

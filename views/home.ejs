@@ -26,16 +26,15 @@
  -->
 
 <!-- Modal -->
-<%- include ("compose/post") %>
+<%- include ("modals/post") %>
 
 <a href="/users/logout" class="btn btn-danger">Logout</a>
 
 <br /><br />
 <% for(let i=0; i < posts.length; i++) {%>
-<div class="card text-white bg-info mb-3" style="max-width: 20rem">
+<div class="card text-white bg-info mb-3" style="max-width: 25rem">
 	<div class="card-header"><%= posts[i].author_id %></div>
 	<div class="card-body">
-		<!-- <h4 class="card-title">...title</h4> -->
 		<p class="card-text"><%= posts[i].text %></p>
 	</div>
 	<div class="card-footer">

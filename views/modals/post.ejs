@@ -1,14 +1,8 @@
-<div
-	class="modal fade"
-	id="composePost"
-	tabindex="-1"
-	aria-labelledby="exampleModalLabel"
-	aria-hidden="true"
->
+<div class="modal fade" id="composePost" tabindex="-1" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="exampleModalLabel">Compose</h5>
+				<h5 class="modal-title">Compose</h5>
 				<button
 					type="button"
 					class="btn-close"
@@ -18,9 +12,7 @@
 			</div>
 			<div class="modal-body">
 				<div class="form-group">
-					<label for="exampleTextarea" class="form-label"></label>
-
-					<form id="formPost" action="/compose/post" method="POST">
+					<form id="formPost" action="/post" method="POST">
 						<div class="form-group form-floating">
 							<textarea
 								class="form-control required"
@@ -48,7 +40,6 @@
 							/>
 						</div> -->
 						<fieldset class="form-group">
-							<!-- <legend class="mt-4">Switches</legend> -->
 							<div class="form-check form-switch">
 								<input
 									class="form-check-input"
