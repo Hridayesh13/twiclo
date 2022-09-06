@@ -8,7 +8,10 @@ router.get("/", forwardAuthenticated, (req, res) => res.render("welcome"));
 
 router.get("/home", ensureAuthenticated, (req, res) => {
 	db.query(
-		`SELECT * FROM posts ORDER BY created_at DESC`,
+		`SELECT a.post_id, a.text, a.created_at, b.name
+		FROM posts a, users b 
+		WHERE a.author_id = b.id
+		ORDER BY a.created_at DESC`,
 		(err, result, fields) => {
 			if (err) throw err;
 			// res.write(result);

@@ -1,0 +1,46 @@
+<h2 class="mt-5">comments</h2>
+<div class="card text-white bg-info mb-3" style="max-width: 25rem">
+	<div class="card-header"><%= post[0].name %></div>
+	<div class="card-body">
+		<p class="card-text"><%= post[0].text %></p>
+	</div>
+	<div class="card-footer">
+		<h6><%= post[0].created_at %></h6>
+	</div>
+</div>
+
+<%- include ("partials/messages") %>
+
+<div class="form-group">
+	<form
+		id="formComment"
+		action="/comments/<%= post[0].post_id %>/users/<%= post[0].id %>"
+		method="POST"
+	>
+		<div class="form-group form-floating">
+			<textarea
+				class="form-control required"
+				placeholder="Type here ..."
+				id="floatingTextarea2"
+				name="comment_Text"
+				style="height: 100px"
+			></textarea>
+			<label for="floatingTextarea2">Comment</label>
+			<div id="character-counter">
+				<span id="typed-characters">0</span>
+				<span>/</span>
+				<span id="maximum-characters">140</span>
+			</div>
+		</div>
+		<button
+			type="submit"
+			id="postButton"
+			form="formComment"
+			class="btn btn-primary"
+		>
+			Add comment
+		</button>
+	</form>
+</div>
+
+<script src="/javascripts/char-counter.js"></script>

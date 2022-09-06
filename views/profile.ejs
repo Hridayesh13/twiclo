@@ -4,9 +4,8 @@
 <br /><br />
 <% for(let i=0; i < posts.length; i++) {%>
 <div class="card text-white bg-info mb-3" style="max-width: 25rem">
-	<!-- <a href="/users/<%= posts[i].author_id %>/posts/<%= posts[i].post_id %>" display: block height: 100% ></a> -->
 	<div class="card-header">
-		<%= posts[i].author_id %>
+		<%= posts[i].name %>
 
 		<button
 			type="button"
@@ -24,9 +23,22 @@
 	</div>
 	<div class="card-footer">
 		<h6><%= posts[i].created_at %></h6>
+	<a href="/comments/<%= posts[i].post_id %>" display: block height: 100% >comments</a>
+
 	</div>
 	<!-- <small><%= posts[i].created_at %></small> -->
 </div>
 <% } %>
 
 <a href="/users/logout" class="btn btn-danger">Logout</a>
+
+<button
+	type="button"
+	class="btn btn-danger"
+	data-bs-toggle="modal"
+	data-bs-target="#deleteUser"
+	style="position: absolute; right: 20px"
+>
+	Delete Account
+</button>
+<%- include ("modals/deleteUser") %>

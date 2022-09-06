@@ -104,7 +104,10 @@ router.get("/logout", (req, res, next) => {
 
 router.get("/:id", ensureAuthenticated, (req, res) => {
 	db.query(
-		`SELECT * FROM posts where author_id = ${req.params.id} ORDER BY created_at DESC`,
+		`SELECT a.post_id, a.text, a.created_at, b.name
+		FROM posts a, users b 
+		WHERE a.author_id = b.id AND a.author_id = ${req.params.id}
+		ORDER BY a.created_at DESC`,
 		(err, result, fields) => {
 			if (err) throw err;
 			res.render("profile", {
@@ -129,5 +132,23 @@ router.post(
 		});
 	}
 );
+
+router.post("/delete_user", ensureAuthenticated, (req, res, next) => {
+	let sql = `UPDATE users
+				SET name='deleted_user',
+				email='deleted_credentials'
+				WHERE id=${req.user.id}`;
+
+	db.query(sql, (err) => {
+		if (err) throw err;
+		console.log("user deleted successfully");
+		req.flash("success_msg", "Account Deleted");
+		res.redirect(`/users/login`);
+	});
+});
+
+// router.post("/delete_user", ensureAuthenticated, (req, res, next) => {
+// 	res.send(`delete_user ${req.user.name}`);
+// });
 
 module.exports = router;
