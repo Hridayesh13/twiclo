@@ -43,4 +43,12 @@
 	</form>
 </div>
 
+<% for(let i=0; i < comments.length; i++) {%>
+<div>
+	<br />
+	<h5><%= comments[i].name %></h5>
+	<p><%= comments[i].text %></p>
+</div>
+<% } %>
+
 <script src="/javascripts/char-counter.js"></script>
