@@ -102,68 +102,63 @@ router.get("/logout", (req, res, next) => {
 	});
 });
 
-// router.get("/:id", ensureAuthenticated, (req, res) => {
-// 	db.query(
-// 		`SELECT a.post_id, a.text, a.created_at, b.name
-// 		FROM posts a, users b
-// 		WHERE a.author_id = b.id AND a.author_id = ${req.params.id}
-// 		ORDER BY a.created_at DESC`,
-// 		(err, result, fields) => {
-// 			if (err) throw err;
-// 			res.render("profile", {
-// 				user: req.user,
-// 				posts: result,
-// 			});
-// 		}
-// 	);
-// });
-
 const resultsPerPage = 5;
 
 router.get("/:id", ensureAuthenticated, (req, res) => {
 	let sql = `SELECT * FROM posts WHERE author_id = ${req.params.id}`;
 	db.query(sql, (err, result) => {
 		if (err) throw err;
+
 		const numOfResults = result.length;
-		const numberOfPages = Math.ceil(numOfResults / resultsPerPage);
-		let page = req.query.page ? Number(req.query.page) : 1;
-		if (page > numberOfPages) {
-			res.redirect(
-				"/users/:id/?page=" + encodeURIComponent(numberOfPages)
-			);
-		} else if (page < 1) {
-			page = 1;
-			res.redirect("/users/:id/?page=" + encodeURIComponent(page));
-		}
-		//Determine the SQL LIMIT starting number
-		const startingLimit = (page - 1) * resultsPerPage;
+		if (numOfResults === 0) {
+			res.render("profile", {
+				user: req.user,
+				posts: result,
+				page: 1,
+				iterator: 1,
+				endingLink: 1,
+				numberOfPages: 1,
+			});
+		} else {
+			const numberOfPages = Math.ceil(numOfResults / resultsPerPage);
+			let page = req.query.page ? Number(req.query.page) : 1;
+			if (page > numberOfPages) {
+				res.redirect(
+					"/users/:id/?page=" + encodeURIComponent(numberOfPages)
+				);
+			} else if (page < 1) {
+				page = 1;
+				res.redirect("/users/:id/?page=" + encodeURIComponent(page));
+			}
+			//Determine the SQL LIMIT starting number
+			const startingLimit = (page - 1) * resultsPerPage;
 
-		// console.log({ numOfResults, numberOfPages, page, startingLimit });
-
-		//Get the relevant number of POSTS for this starting page
-		sql = `SELECT a.post_id, a.text, a.created_at, b.name
+			//Get the relevant number of POSTS for this starting page
+			sql = `SELECT a.post_id, a.text, a.created_at, b.name
 		FROM posts a, users b 
 		WHERE a.author_id = b.id AND a.author_id = ${req.params.id}
 		ORDER BY a.created_at DESC
 		LIMIT ${startingLimit},${resultsPerPage}`;
-		db.query(sql, (err, result) => {
-			if (err) throw err;
-			let iterator = page - 5 < 1 ? 1 : page - 5;
-			let endingLink =
-				iterator + 9 <= numberOfPages ? iterator + 9 : numberOfPages;
-			if (endingLink < page + 4 && iterator > 4) {
-				iterator -= page + 4 - numberOfPages;
-			}
-			// console.log({ iterator, endingLink });
-			res.render("profile", {
-				user: req.user,
-				posts: result,
-				page,
-				iterator,
-				endingLink,
-				numberOfPages,
+			db.query(sql, (err, result) => {
+				if (err) throw err;
+				let iterator = page - 5 < 1 ? 1 : page - 5;
+				let endingLink =
+					iterator + 9 <= numberOfPages
+						? iterator + 9
+						: numberOfPages;
+				if (endingLink < page + 4 && iterator > 4) {
+					iterator -= page + 4 - numberOfPages;
+				}
+				res.render("profile", {
+					user: req.user,
+					posts: result,
+					page,
+					iterator,
+					endingLink,
+					numberOfPages,
+				});
 			});
-		});
+		}
 	});
 });
 
@@ -200,9 +195,5 @@ router.post("/delete_user", ensureAuthenticated, (req, res, next) => {
 		res.redirect(`/users/login`);
 	});
 });
-
-// router.post("/delete_user", ensureAuthenticated, (req, res, next) => {
-// 	res.send(`delete_user ${req.user.name}`);
-// });
 
 module.exports = router;

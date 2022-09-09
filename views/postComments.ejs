@@ -1,4 +1,7 @@
 <h2 class="mt-5">comments</h2>
+<a href="/home" class="btn btn-info" style="position: absolute; right: 20px">
+	Go Back
+</a>
 <div class="card text-white bg-info mb-3" style="max-width: 25rem">
 	<div class="card-header"><%= post[0].name %></div>
 	<div class="card-body">
@@ -50,5 +53,49 @@
 	<p><%= comments[i].text %></p>
 </div>
 <% } %>
+<br />
+<div>
+	<ul class="pagination">
+		<!-- prev arrow -->
+		<% if(page > 1) { %>
+		<li class="page-item">
+			<a
+				class="page-link"
+				href="/comments/<%= post[0].post_id %>/?page=<%=page-1%>"
+				>&laquo;</a
+			>
+		</li>
+		<% } %> <% for(let i = iterator; i <= endingLink; i++) { %>
+		<!-- active page -->
+		<% if(i === page) { %>
+		<li class="page-item active">
+			<a
+				class="page-link"
+				href="/comments/<%= post[0].post_id %>/?page=<%=i%>"
+				><%=i%></a
+			>
+		</li>
+		<% continue; %> <% } %>
+		<!-- all other pages -->
+		<li class="page-item">
+			<a
+				class="page-link"
+				href="/comments/<%= post[0].post_id %>/?page=<%=i%>"
+				><%=i%></a
+			>
+		</li>
+		<% } %>
+		<!-- next arrow -->
+		<% if(page < numberOfPages) { %>
+		<li class="page-item">
+			<a
+				class="page-link"
+				href="/comments/<%= post[0].post_id %>/?page=<%=page+1%>"
+				>&raquo;</a
+			>
+		</li>
+		<% } %>
+	</ul>
+</div>
 
 <script src="/javascripts/char-counter.js"></script>

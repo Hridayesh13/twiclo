@@ -16,15 +16,6 @@
 	Post
 </button>
 
-<!-- 
-	$("#composePost").on("loaded.bs.modal", function (e) {
-		if (typeof history.pushState != "undefined") {
-			let obj = { Title: "Compose", Url: "compose/post" };
-			history.pushState(obj, obj.Title, obj.Url);
-		}
-	});
- -->
-
 <!-- Modal -->
 <%- include ("modals/post") %>
 
@@ -45,6 +36,7 @@
 </div>
 <% } %>
 
+<br>
 <div>
 	<ul class="pagination">
 		<!-- prev arrow -->

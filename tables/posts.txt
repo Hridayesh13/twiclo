@@ -1,3 +1,0 @@
-CREATE TABLE IF NOT EXISTS `posts` (   `post_id` int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,   `text` varchar(280) NOT NULL,   `author_id` int(11) NOT NULL,   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-ALTER TABLE `posts` ADD FOREIGN KEY (`author_id`) REFERENCES users(`id`);
-ALTER TABLE posts ADD possibly_sensitive BOOLEAN default 0;

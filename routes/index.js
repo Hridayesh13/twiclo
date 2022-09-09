@@ -6,7 +6,6 @@ const db = require("../config/db.js");
 
 router.get("/", forwardAuthenticated, (req, res) => res.render("welcome"));
 
-//How many posts we want to show on each page
 const resultsPerPage = 5;
 
 router.get("/home", ensureAuthenticated, (req, res) => {
@@ -25,8 +24,6 @@ router.get("/home", ensureAuthenticated, (req, res) => {
 		//Determine the SQL LIMIT starting number
 		const startingLimit = (page - 1) * resultsPerPage;
 
-		// console.log({ numOfResults, numberOfPages, page, startingLimit });
-
 		//Get the relevant number of POSTS for this starting page
 		sql = `SELECT a.post_id, a.text, a.created_at, b.name
 		FROM posts a, users b
@@ -41,7 +38,6 @@ router.get("/home", ensureAuthenticated, (req, res) => {
 			if (endingLink < page + 4 && iterator > 4) {
 				iterator -= page + 4 - numberOfPages;
 			}
-			// console.log({ iterator, endingLink });
 			res.render("home", {
 				user: req.user,
 				posts: result,
