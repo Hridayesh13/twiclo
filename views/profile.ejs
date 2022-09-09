@@ -32,6 +32,37 @@
 </div>
 <% } %>
 
+<div>
+	<ul class="pagination">
+		<!-- prev arrow -->
+		<% if(page > 1) { %> 
+			<li class="page-item">
+				<a class="page-link" href="/users/<%= user.id %>/?page=<%=page-1%>">&laquo;</a>
+	  		</li> 
+		<% } %>
+	  
+	  	<% for(let i = iterator; i <= endingLink; i++) { %>
+			<!-- active page -->
+			<% if(i === page) { %>
+				<li class="page-item active">
+					<a class="page-link" href="/users/<%= user.id %>/?page=<%=i%>"><%=i%></a>
+				</li>
+				<% continue; %>
+			<% } %>
+			<!-- all other pages -->
+				<li class="page-item">
+					<a class="page-link" href="/users/<%= user.id %>/?page=<%=i%>"><%=i%></a>
+				</li>
+		<% } %>
+		<!-- next arrow -->
+	  	<% if(page < numberOfPages) { %> 
+			<li class="page-item">
+				<a class="page-link" href="/users/<%= user.id %>/?page=<%=page+1%>">&raquo;</a>
+	  		</li> 
+		<% } %>
+	</ul>
+</div>
+
 <a href="/users/logout" class="btn btn-danger">Logout</a>
 
 <button

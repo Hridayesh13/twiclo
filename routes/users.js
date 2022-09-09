@@ -102,20 +102,69 @@ router.get("/logout", (req, res, next) => {
 	});
 });
 
+// router.get("/:id", ensureAuthenticated, (req, res) => {
+// 	db.query(
+// 		`SELECT a.post_id, a.text, a.created_at, b.name
+// 		FROM posts a, users b
+// 		WHERE a.author_id = b.id AND a.author_id = ${req.params.id}
+// 		ORDER BY a.created_at DESC`,
+// 		(err, result, fields) => {
+// 			if (err) throw err;
+// 			res.render("profile", {
+// 				user: req.user,
+// 				posts: result,
+// 			});
+// 		}
+// 	);
+// });
+
+const resultsPerPage = 5;
+
 router.get("/:id", ensureAuthenticated, (req, res) => {
-	db.query(
-		`SELECT a.post_id, a.text, a.created_at, b.name
+	let sql = `SELECT * FROM posts WHERE author_id = ${req.params.id}`;
+	db.query(sql, (err, result) => {
+		if (err) throw err;
+		const numOfResults = result.length;
+		const numberOfPages = Math.ceil(numOfResults / resultsPerPage);
+		let page = req.query.page ? Number(req.query.page) : 1;
+		if (page > numberOfPages) {
+			res.redirect(
+				"/users/:id/?page=" + encodeURIComponent(numberOfPages)
+			);
+		} else if (page < 1) {
+			page = 1;
+			res.redirect("/users/:id/?page=" + encodeURIComponent(page));
+		}
+		//Determine the SQL LIMIT starting number
+		const startingLimit = (page - 1) * resultsPerPage;
+
+		// console.log({ numOfResults, numberOfPages, page, startingLimit });
+
+		//Get the relevant number of POSTS for this starting page
+		sql = `SELECT a.post_id, a.text, a.created_at, b.name
 		FROM posts a, users b 
 		WHERE a.author_id = b.id AND a.author_id = ${req.params.id}
-		ORDER BY a.created_at DESC`,
-		(err, result, fields) => {
+		ORDER BY a.created_at DESC
+		LIMIT ${startingLimit},${resultsPerPage}`;
+		db.query(sql, (err, result) => {
 			if (err) throw err;
+			let iterator = page - 5 < 1 ? 1 : page - 5;
+			let endingLink =
+				iterator + 9 <= numberOfPages ? iterator + 9 : numberOfPages;
+			if (endingLink < page + 4 && iterator > 4) {
+				iterator -= page + 4 - numberOfPages;
+			}
+			// console.log({ iterator, endingLink });
 			res.render("profile", {
 				user: req.user,
 				posts: result,
+				page,
+				iterator,
+				endingLink,
+				numberOfPages,
 			});
-		}
-	);
+		});
+	});
 });
 
 router.post(
@@ -124,8 +173,13 @@ router.post(
 	(req, res, next) => {
 		let sql = `DELETE FROM posts WHERE post_id=${req.params.postId}`;
 
-		db.query(sql, (err) => {
+		db.query(sql, async (err) => {
 			if (err) throw err;
+			let sql1 = `DELETE FROM comments WHERE post_id=${req.params.postId}`;
+
+			await db.query(sql1).catch((err) => {
+				throw err;
+			});
 			console.log("deleted successfully");
 			req.flash("success_msg", "Post Deleted");
 			res.redirect(`/users/${req.params.id}`);
