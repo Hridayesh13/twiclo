@@ -1,12 +1,13 @@
 <h1 class="mt-5">Profile</h1>
 <p class="lead mb-3">Welcome <%= user.name %></p>
-<a href="/home" class="btn btn-info">Go Home</a>
-<br /><br />
+<a href="/home" class="btn btn-info" style="position: absolute; right: 20px">Go Home</a>
+<%- include ("partials/messages") %>
+
+<h3>My Posts</h3>
 <% for(let i=0; i < posts.length; i++) {%>
 <div class="card text-white bg-info mb-3" style="max-width: 25rem">
-	<!-- <a href="/users/<%= posts[i].author_id %>/posts/<%= posts[i].post_id %>" display: block height: 100% ></a> -->
 	<div class="card-header">
-		<%= posts[i].author_id %>
+		<%= posts[i].name %>
 
 		<button
 			type="button"
@@ -17,16 +18,62 @@
 		>
 			Delete
 		</button>
-		<%- include ("modals/delete", {i: i}) %>
+		<%- include ("modals/deletePost", {i: i}) %>
 	</div>
 	<div class="card-body">
 		<p class="card-text"><%= posts[i].text %></p>
 	</div>
 	<div class="card-footer">
 		<h6><%= posts[i].created_at %></h6>
+	<a href="/comments/<%= posts[i].post_id %>" display: block height: 100% >comments</a>
+
 	</div>
-	<!-- <small><%= posts[i].created_at %></small> -->
 </div>
 <% } %>
 
+<br>
+
+<div>
+	<ul class="pagination">
+		<!-- prev arrow -->
+		<% if(page > 1) { %> 
+			<li class="page-item">
+				<a class="page-link" href="/users/<%= user.id %>/?page=<%=page-1%>">&laquo;</a>
+	  		</li> 
+		<% } %>
+	  
+	  	<% for(let i = iterator; i <= endingLink; i++) { %>
+			<!-- active page -->
+			<% if(i === page) { %>
+				<li class="page-item active">
+					<a class="page-link" href="/users/<%= user.id %>/?page=<%=i%>"><%=i%></a>
+				</li>
+				<% continue; %>
+			<% } %>
+			<!-- all other pages -->
+				<li class="page-item">
+					<a class="page-link" href="/users/<%= user.id %>/?page=<%=i%>"><%=i%></a>
+				</li>
+		<% } %>
+		<!-- next arrow -->
+	  	<% if(page < numberOfPages) { %> 
+			<li class="page-item">
+				<a class="page-link" href="/users/<%= user.id %>/?page=<%=page+1%>">&raquo;</a>
+	  		</li> 
+		<% } %>
+	</ul>
+</div>
+
 <a href="/users/logout" class="btn btn-danger">Logout</a>
+
+<button
+	type="button"
+	class="btn btn-danger"
+	data-bs-toggle="modal"
+	data-bs-target="#deleteUser"
+	style="position: absolute; right: 20px"
+>
+	Delete Account
+</button>
+
+<%- include ("modals/deleteUser") %>

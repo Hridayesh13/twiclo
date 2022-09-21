@@ -6,23 +6,49 @@ const db = require("../config/db.js");
 
 router.get("/", forwardAuthenticated, (req, res) => res.render("welcome"));
 
+const resultsPerPage = 5;
+
 router.get("/home", ensureAuthenticated, (req, res) => {
-	db.query(
-		`SELECT * FROM posts ORDER BY created_at DESC`,
-		(err, result, fields) => {
+	let sql = "SELECT * FROM posts";
+	db.query(sql, (err, result) => {
+		if (err) throw err;
+		const numOfResults = result.length;
+		const numberOfPages = Math.ceil(numOfResults / resultsPerPage);
+		let page = req.query.page ? Number(req.query.page) : 1;
+		if (page > numberOfPages) {
+			res.redirect("/home/?page=" + encodeURIComponent(numberOfPages));
+		} else if (page < 1) {
+			page = 1;
+			res.redirect("/home/?page=" + encodeURIComponent(page));
+		}
+		//Determine the SQL LIMIT starting number
+		const startingLimit = (page - 1) * resultsPerPage;
+
+		//Get the relevant number of POSTS for this starting page
+		sql = `SELECT a.post_id, a.text, a.created_at, b.name
+		FROM posts a, users b
+		WHERE a.author_id = b.id
+		ORDER BY a.created_at DESC
+		LIMIT ${startingLimit},${resultsPerPage}`;
+		db.query(sql, (err, result) => {
 			if (err) throw err;
-			// res.write(result);
+			let iterator = page - 5 < 1 ? 1 : page - 5;
+			let endingLink =
+				iterator + 9 <= numberOfPages ? iterator + 9 : numberOfPages;
+			if (endingLink < page + 4 && iterator > 4) {
+				iterator -= page + 4 - numberOfPages;
+			}
 			res.render("home", {
 				user: req.user,
 				posts: result,
+				page,
+				iterator,
+				endingLink,
+				numberOfPages,
 			});
-		}
-	);
+		});
+	});
 });
-
-// router.get("/compose/post", ensureAuthenticated, (req, res) =>
-// 	res.render("compose/post")
-// );
 
 router.post("/post", ensureAuthenticated, (req, res) => {
 	let { post_Text, possibly_sensitive } = req.body;

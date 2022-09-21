@@ -1,0 +1,49 @@
+<div
+	class="modal fade text-black"
+	id="deletePost"
+	tabindex="-1"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Are you sure?</h5>
+				<button
+					type="button"
+					class="btn-close"
+					data-bs-dismiss="modal"
+					aria-label="Close"
+				></button>
+			</div>
+			<div class="modal-body">
+				<p>
+					Do you really want to delete this post? This process cannot
+					be undone.
+				</p>
+				<div class="form-group">
+					<form
+						id="formDeletePost"
+						action="/users/<%= user.id %>/posts/<%= posts[i].post_id %>/delete"
+						method="POST"
+					></form>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button
+					type="submit"
+					form="formDeletePost"
+					class="btn btn-danger"
+				>
+					Delete
+				</button>
+				<button
+					type="button"
+					class="btn btn-primary"
+					data-bs-dismiss="modal"
+				>
+					Cancel
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

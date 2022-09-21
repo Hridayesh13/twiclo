@@ -1,4 +1,5 @@
 const mysql = require("mysql2");
+const util = require("util");
 
 const db = mysql.createConnection({
 	host: "localhost",
@@ -7,6 +8,9 @@ const db = mysql.createConnection({
 	database: "twiclone",
 });
 
-// connection.end();
+// promise wrapper to enable async await with MYSQL
+db.query = util.promisify(db.query).bind(db);
+
+// db.end();
 
 module.exports = db;

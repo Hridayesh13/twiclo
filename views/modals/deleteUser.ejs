@@ -1,6 +1,6 @@
 <div
 	class="modal fade text-black"
-	id="deletePost"
+	id="deleteUser"
 	tabindex="-1"
 	aria-hidden="true"
 >
@@ -17,13 +17,14 @@
 			</div>
 			<div class="modal-body">
 				<p>
-					Do you really want to delete this post? This process cannot
-					be undone.
+					Do you really want to delete this account? All your post and
+					comments will remain but without the username. This process
+					cannot be undone.
 				</p>
 				<div class="form-group">
 					<form
-						id="formDeletePost"
-						action="/users/<%= posts[i].author_id %>/posts/<%= posts[i].post_id %>/delete"
+						id="formDeleteUser"
+						action="/users/delete_user"
 						method="POST"
 					></form>
 				</div>
@@ -31,10 +32,10 @@
 			<div class="modal-footer">
 				<button
 					type="submit"
-					form="formDeletePost"
+					form="formDeleteUser"
 					class="btn btn-danger"
 				>
-					Delete
+					I'm sure. Delete.
 				</button>
 				<button
 					type="button"

@@ -10,13 +10,12 @@ const app = express();
 require("./config/passport")(passport);
 
 const db = require("./config/db.js");
-db.connect((error) => {
-	if (!!error) {
-		console.log(error);
-		throw error;
-	} else {
-		console.log("Connected!: to database :)");
+db.connect((err) => {
+	if (err) {
+		console.log("error connecting: " + err.stack);
+		return;
 	}
+	console.log("connected as... " + db.threadId);
 });
 
 app.use(express.static(path.join(__dirname, "public")));
@@ -52,6 +51,7 @@ app.use(function (req, res, next) {
 
 app.use("/", require("./routes"));
 app.use("/users", require("./routes/users"));
+app.use("/comments", require("./routes/comments"));
 
 const port = process.env.PORT || 5000;
 
