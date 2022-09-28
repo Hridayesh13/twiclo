@@ -1,24 +1,26 @@
-const textAreaElement = document.querySelector("#floatingTextarea2");
-console.log(textAreaElement);
+let textArea = document.querySelector("#floatingTextarea2");
+let characterCounter = document.querySelector("#character-counter");
+const maxNumOfChars = 280;
 
-const characterCounterElement = document.querySelector("#character-counter");
+document.getElementById("postButton").disabled = true;
 
-const typedCharactersElement = document.querySelector("#typed-characters");
+textArea.addEventListener("keyup", (event) => {
+	let typedCharacters = textArea.value.length;
+	// console.log(typedCharacters);
+	let counter = maxNumOfChars - typedCharacters;
+	characterCounter.textContent = counter + "/280";
 
-const maximumCharacters = 280;
-
-textAreaElement.addEventListener("keydown", (event) => {
-	const typedCharacters = textAreaElement.value.length;
-
-	typedCharactersElement.textContent = typedCharacters;
-
-	if (typedCharacters >= 220 && typedCharacters <= 280) {
-		characterCounterElement.classList = "text-warning";
-		document.getElementById("postButton").disabled = false;
-	} else if (typedCharacters > 280) {
-		characterCounterElement.classList = "text-danger";
+	if (counter < 0) {
+		characterCounter.style.color = "red";
 		document.getElementById("postButton").disabled = true;
-		// document.getElementById("postButtonSpan").title =
-		// 	"at most 280 characters";
+	} else if (counter == 280) {
+		characterCounter.style.color = "grey";
+		document.getElementById("postButton").disabled = true;
+	} else if (counter < 40 && counter > 0) {
+		characterCounter.style.color = "orange";
+		document.getElementById("postButton").disabled = false;
+	} else {
+		characterCounter.style.color = "black";
+		document.getElementById("postButton").disabled = false;
 	}
 });

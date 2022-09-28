@@ -2,15 +2,41 @@
 <a href="/home" class="btn btn-info" style="position: absolute; right: 20px">
 	Go Back
 </a>
-<div class="card text-white bg-info mb-3" style="max-width: 25rem">
-	<div class="card-header"><%= post[0].name %></div>
+<div class="card mb-3">
+	<div class="card-header">
+		<a href="/users/<%= post[0].id %>"><%= post[0].name %></a>
+	</div>
 	<div class="card-body">
 		<p class="card-text"><%= post[0].text %></p>
 	</div>
+	<div class="form-group">
+		<form
+			id="formLikex"
+			action="/likes/<%= post[0].post_id %>/users/<%= user.id %>"
+			method="POST"
+		>
+			<button
+				type="submit"
+				id="likeButtonx"
+				form="formLikex"
+				class="btn btn-primary"
+			>
+				Like
+			</button>
+		</form>
+	</div>
+
+	<ul class="list-group list-group-flush">
+		<li class="list-group-item">
+			<span><%= post[0].nLikes %></span> Likes
+		</li>
+	</ul>
 	<div class="card-footer">
 		<h6><%= post[0].created_at %></h6>
 	</div>
 </div>
+
+<p><%= post[0].nComments %> comments</p>
 
 <%- include ("partials/messages") %>
 
@@ -30,9 +56,7 @@
 			></textarea>
 			<label for="floatingTextarea2">Comment</label>
 			<div id="character-counter">
-				<span id="typed-characters">0</span>
-				<span>/</span>
-				<span id="maximum-characters">140</span>
+				<span>0/140</span>
 			</div>
 		</div>
 		<button
@@ -45,8 +69,7 @@
 		</button>
 	</form>
 </div>
-
-<% for(let i=0; i < comments.length; i++) {%>
+<% if (comments.length) { %> <% for(let i=0; i < comments.length; i++) {%>
 <div>
 	<br />
 	<h5><%= comments[i].name %></h5>
@@ -97,5 +120,6 @@
 		<% } %>
 	</ul>
 </div>
+<% } %>
 
-<script src="/javascripts/char-counter.js"></script>
+<script src="/javascripts/char-comment.js"></script>

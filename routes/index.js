@@ -25,7 +25,7 @@ router.get("/home", ensureAuthenticated, (req, res) => {
 		const startingLimit = (page - 1) * resultsPerPage;
 
 		//Get the relevant number of POSTS for this starting page
-		sql = `SELECT a.post_id, a.text, a.created_at, b.name
+		sql = `SELECT a.*, b.name, b.id
 		FROM posts a, users b
 		WHERE a.author_id = b.id
 		ORDER BY a.created_at DESC

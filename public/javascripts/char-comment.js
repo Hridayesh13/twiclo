@@ -1,19 +1,19 @@
 let textArea = document.querySelector("#floatingTextarea2");
 let characterCounter = document.querySelector("#character-counter");
-const maxNumOfChars = 280;
+const maxNumOfChars = 140;
 
 document.getElementById("postButton").disabled = true;
 
-textAreaElement.addEventListener("keydown", (event) => {
-	let numOfEnteredChars = textArea.value.length;
-	console.log(numOfEnteredChars);
-	let counter = maxNumOfChars - numOfEnteredChars;
-	characterCounter.textContent = counter + "/280";
+textArea.addEventListener("keyup", (event) => {
+	let typedCharacters = textArea.value.length;
+	// console.log(typedCharacters);
+	let counter = maxNumOfChars - typedCharacters;
+	characterCounter.textContent = counter + "/140";
 
 	if (counter < 0) {
 		characterCounter.style.color = "red";
 		document.getElementById("postButton").disabled = true;
-	} else if (counter == 280) {
+	} else if (counter == 140) {
 		characterCounter.style.color = "grey";
 		document.getElementById("postButton").disabled = true;
 	} else if (counter < 20 && counter > 0) {

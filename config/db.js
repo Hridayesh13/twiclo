@@ -5,7 +5,7 @@ const db = mysql.createConnection({
 	host: "localhost",
 	user: "root",
 	password: "",
-	database: "twiclone",
+	database: "twiclo",
 });
 
 // promise wrapper to enable async await with MYSQL

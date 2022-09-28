@@ -23,15 +23,35 @@
 
 <br /><br />
 <% for(let i=0; i < posts.length; i++) {%>
-<div class="card text-white bg-info mb-3" style="max-width: 25rem">
-	<div class="card-header"><%= posts[i].name %></div>
+<div class="card mb-3">
+	<h3 class="card-header"><a href="/users/<%= posts[i].id %>"><%= posts[i].name %></a></h3>
 	<div class="card-body">
-		<p class="card-text"><%= posts[i].text %></p>
+		<h4 class="card-text"><%= posts[i].text %></h4>
 	</div>
-	<div class="card-footer">
+	<div class="form-group">
+		<form
+		id="formLike<%=i%>"
+		action="/likes/<%= posts[i].post_id %>/users/<%= user.id %>"
+		method="POST"
+		>
+			<button
+				type="submit"
+				id="likeButton<%=i%>"
+				form="formLike<%=i%>"
+				class="btn btn-primary"
+			>
+				Like
+			</button>
+		</form>
+	</div>
+	
+	<ul class="list-group list-group-flush">
+		<li class="list-group-item"><span><%= posts[i].nLikes %></span> Likes</li>
+		<li class="list-group-item"><span><%= posts[i].nComments %></span><a href="/comments/<%= posts[i].post_id %>" display: block height: 100% > Comments</a></li>
+	  </ul>
+		
+	<div class="card-footer text-muted">
 		<h6><%= posts[i].created_at %></h6>
-	<a href="/comments/<%= posts[i].post_id %>" display: block height: 100% >comments</a>
-
 	</div>
 </div>
 <% } %>

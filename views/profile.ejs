@@ -1,34 +1,41 @@
 <h1 class="mt-5">Profile</h1>
-<p class="lead mb-3">Welcome <%= user.name %></p>
+<h2 > Username: <%= posts[0].name %></h2>
 <a href="/home" class="btn btn-info" style="position: absolute; right: 20px">Go Home</a>
 <%- include ("partials/messages") %>
 
-<h3>My Posts</h3>
+<h3>Posts: </h3>
 <% for(let i=0; i < posts.length; i++) {%>
-<div class="card text-white bg-info mb-3" style="max-width: 25rem">
-	<div class="card-header">
-		<%= posts[i].name %>
-
-		<button
-			type="button"
-			class="btn btn-danger"
-			data-bs-toggle="modal"
-			data-bs-target="#deletePost"
-			style="position: absolute; right: 20px"
-		>
-			Delete
-		</button>
-		<%- include ("modals/deletePost", {i: i}) %>
+	<div class="card mb-3">
+		<h3 class="card-header"><a href="/users/<%= posts[i].id %>"><%= posts[i].name %></a></h3>
+		<div class="card-body">
+			<h4 class="card-text"><%= posts[i].text %></h4>
+		</div>
+		<div class="form-group">
+			<form
+			id="formLike<%=i%>"
+			action="/likes/<%= posts[i].post_id %>/users/<%= user.id %>"
+			method="POST"
+			>
+				<button
+					type="submit"
+					id="likeButton<%=i%>"
+					form="formLike<%=i%>"
+					class="btn btn-primary"
+				>
+					Like
+				</button>
+			</form>
+		</div>
+		
+		<ul class="list-group list-group-flush">
+			<li class="list-group-item"><span><%= posts[i].nLikes %></span> Likes</li>
+			<li class="list-group-item"><span><%= posts[i].nComments %></span><a href="/comments/<%= posts[i].post_id %>" display: block height: 100% > Comments</a></li>
+		  </ul>
+			
+		<div class="card-footer text-muted">
+			<h6><%= posts[i].created_at %></h6>
+		</div>
 	</div>
-	<div class="card-body">
-		<p class="card-text"><%= posts[i].text %></p>
-	</div>
-	<div class="card-footer">
-		<h6><%= posts[i].created_at %></h6>
-	<a href="/comments/<%= posts[i].post_id %>" display: block height: 100% >comments</a>
-
-	</div>
-</div>
 <% } %>
 
 <br>
@@ -66,14 +73,16 @@
 
 <a href="/users/logout" class="btn btn-danger">Logout</a>
 
-<button
-	type="button"
-	class="btn btn-danger"
-	data-bs-toggle="modal"
-	data-bs-target="#deleteUser"
-	style="position: absolute; right: 20px"
->
-	Delete Account
-</button>
+<% if (posts[0].id === user.id) { %>
+	<button
+		type="button"
+		class="btn btn-danger"
+		data-bs-toggle="modal"
+		data-bs-target="#deleteUser"
+		style="position: absolute; right: 20px"
+	>
+		Delete Account
+	</button>
 
-<%- include ("modals/deleteUser") %>
+	<%- include ("modals/deleteUser") %>
+<% } %>

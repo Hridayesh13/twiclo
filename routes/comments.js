@@ -8,7 +8,7 @@ const resultsPerPage = 5;
 router.get("/:post_id", ensureAuthenticated, async (req, res) => {
 	try {
 		// res.send(req.params);
-		let sql1 = `SELECT a.post_id, a.text, a.created_at, b.name, b.id
+		let sql1 = `SELECT a.*, b.name, b.id
 					FROM posts a, users b
 					WHERE a.author_id = b.id AND a.post_id = ${req.params.post_id}`;
 
@@ -52,7 +52,7 @@ router.get("/:post_id", ensureAuthenticated, async (req, res) => {
 			const startingLimit = (page - 1) * resultsPerPage;
 
 			//Get the relevant number of POSTS for this starting page
-			sql = `SELECT a.text, a.created_at, b.name, b.id
+			sql = `SELECT a.*, b.name, b.id
 					FROM comments a, users b
 					WHERE a.author_id = b.id AND a.post_id = ${req.params.post_id}
 					ORDER BY a.created_at DESC
@@ -68,6 +68,7 @@ router.get("/:post_id", ensureAuthenticated, async (req, res) => {
 					iterator -= page + 4 - numberOfPages;
 				}
 				res.render("postComments", {
+					user: req.user,
 					post: post,
 					comments: result,
 					page,
@@ -97,6 +98,12 @@ router.post("/:post_id/users/:id", ensureAuthenticated, (req, res) => {
 		console.log("comment successful");
 		req.flash("success_msg", "Comment added successfully");
 		res.redirect(`/comments/${req.params.post_id}`);
+	});
+
+	let sql1 = `UPDATE posts SET nComments=nComments+1 WHERE post_id=${req.params.post_id}`;
+
+	let query1 = db.query(sql1, (err) => {
+		if (err) throw err;
 	});
 });
 
