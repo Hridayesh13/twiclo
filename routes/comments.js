@@ -26,6 +26,7 @@ router.get("/:post_id", ensureAuthenticated, async (req, res) => {
 
 		if (numOfResults === 0) {
 			res.render("postComments", {
+				user: req.user,
 				post: post,
 				comments: comments,
 				page: 1,
