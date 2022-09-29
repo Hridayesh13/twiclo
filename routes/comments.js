@@ -108,4 +108,20 @@ router.post("/:post_id/users/:id", ensureAuthenticated, (req, res) => {
 	});
 });
 
+router.post("/:post_id/:comment_id/delete", ensureAuthenticated, (req, res) => {
+	let sql = `DELETE FROM comments WHERE comment_id=${req.params.comment_id}`;
+
+	let query = db.query(sql, (err) => {
+		if (err) throw err;
+		console.log("delete comment successful");
+		req.flash("success_msg", "Comment deleted!!");
+		let sql1 = `UPDATE posts SET nComments=nComments-1 WHERE post_id=${req.params.post_id}`;
+
+		let query1 = db.query(sql1, (err) => {
+			if (err) throw err;
+		});
+		res.redirect(`/comments/${req.params.post_id}`);
+	});
+});
+
 module.exports = router;

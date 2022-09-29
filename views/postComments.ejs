@@ -74,6 +74,16 @@
 	<br />
 	<h5><%= comments[i].name %></h5>
 	<p><%= comments[i].text %></p>
+	<button
+		type="button"
+		class="btn btn-danger"
+		data-bs-toggle="modal"
+		data-bs-target="#deleteComment"
+		style="position: absolute; right: 20px"
+	>
+		Delete
+	</button>
+	<%- include ("modals/deleteComment", {i: i}) %>
 </div>
 <% } %>
 <br />
