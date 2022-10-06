@@ -6,9 +6,11 @@ const { ensureAuthenticated, forwardAuthenticated } = require("../config/auth");
 
 const db = require("../config/db.js");
 
-router.get("/login", (req, res) => res.render("login"));
+router.get("/login", (req, res) => res.render("login", { user: req.user }));
 
-router.get("/register", (req, res) => res.render("register"));
+router.get("/register", (req, res) =>
+	res.render("register", { user: req.user })
+);
 
 router.post("/register", (req, res, next) => {
 	const { name, email, password, password2 } = req.body;
@@ -33,6 +35,7 @@ router.post("/register", (req, res, next) => {
 			email,
 			password,
 			password2,
+			user: req.user,
 		});
 	} else {
 		db.query(
@@ -49,6 +52,7 @@ router.post("/register", (req, res, next) => {
 						email,
 						password,
 						password2,
+						user: req.user,
 					});
 				} else {
 					//new user
@@ -109,11 +113,21 @@ router.get("/:id", ensureAuthenticated, (req, res) => {
 	db.query(sql, (err, result) => {
 		if (err) throw err;
 
+		let sql1 = `SELECT post_id FROM likes WHERE user_id=${req.user.id} ORDER BY post_id DESC`;
+		let userlikes = [];
+		db.query(sql1, (err, result) => {
+			if (err) throw err;
+			for (let i = 0; i < result.length; i++) {
+				userlikes.push(result[i].post_id);
+			}
+		});
+
 		const numOfResults = result.length;
 		if (numOfResults === 0) {
 			res.render("profile", {
 				user: req.user,
 				posts: result,
+				userlikes: userlikes,
 				page: 1,
 				iterator: 1,
 				endingLink: 1,
@@ -152,6 +166,7 @@ router.get("/:id", ensureAuthenticated, (req, res) => {
 				res.render("profile", {
 					user: req.user,
 					posts: result,
+					userlikes: userlikes,
 					page,
 					iterator,
 					endingLink,
@@ -165,16 +180,20 @@ router.get("/:id", ensureAuthenticated, (req, res) => {
 router.post(
 	"/:id/posts/:postId/delete",
 	ensureAuthenticated,
-	(req, res, next) => {
-		let sql = `DELETE FROM posts WHERE post_id=${req.params.postId}`;
+	async (req, res, next) => {
+		let sql1 = `DELETE FROM comments WHERE post_id=${req.params.postId}`;
+		await db.query(sql1).catch((err) => {
+			throw err;
+		});
 
+		let sql2 = `DELETE FROM likes WHERE post_id=${req.params.postId}`;
+		await db.query(sql2).catch((err) => {
+			throw err;
+		});
+
+		let sql = `DELETE FROM posts WHERE post_id=${req.params.postId}`;
 		db.query(sql, async (err) => {
 			if (err) throw err;
-			let sql1 = `DELETE FROM comments WHERE post_id=${req.params.postId}`;
-
-			await db.query(sql1).catch((err) => {
-				throw err;
-			});
 			console.log("deleted successfully");
 			req.flash("success_msg", "Post Deleted");
 			res.redirect(`/users/${req.params.id}`);

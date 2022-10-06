@@ -3,27 +3,79 @@
 	Go Back
 </a>
 <div class="card mb-3">
-	<div class="card-header">
+	<h4 class="card-header">
 		<a href="/users/<%= post[0].id %>"><%= post[0].name %></a>
-	</div>
+	</h4>
 	<div class="card-body">
 		<p class="card-text"><%= post[0].text %></p>
 	</div>
+	<% if (post[0].possibly_sensitive) { %>
+	<div class="card-body" id="postContent" style="filter: blur(10px)">
+		<h4 class="card-text"><%= post[0].text %></h4>
+		<% if (post[0].media) { %>
+		<img
+			src="https://images.weserv.nl/?url=<%= post[0].media %>&w=500&h=500&fit=inside"
+			alt=""
+			srcset=""
+		/>
+		<p>
+			<a href="<%= post[0].media %>" target="_blank">show full image</a>
+		</p>
+		<% } %>
+	</div>
+	<div class="form-check form-switch">
+		<input class="form-check-input" type="checkbox" id="showBtn" />
+		<label class="form-check-label" for="flexSwitchCheckDefault"
+			>Show sensitive content</label
+		>
+	</div>
+	<% } else { %>
+	<div class="card-body">
+		<h4 class="card-text"><%= post[0].text %></h4>
+		<% if (post[0].media) { %>
+		<img
+			src="https://images.weserv.nl/?url=<%= post[0].media %>&w=500&h=500&fit=inside"
+			alt=""
+			srcset=""
+		/>
+		<p>
+			<a href="<%= post[0].media %>" target="_blank">show full image</a>
+		</p>
+		<% } %>
+	</div>
+	<% } %>
 	<div class="form-group">
+		<% if(!userlikes.includes(post[0].post_id)) { %>
 		<form
-			id="formLikex"
+			id="formLike"
 			action="/likes/<%= post[0].post_id %>/users/<%= user.id %>"
 			method="POST"
 		>
 			<button
 				type="submit"
-				id="likeButtonx"
-				form="formLikex"
+				id="likeButton"
+				form="formLike"
 				class="btn btn-primary"
 			>
 				Like
 			</button>
 		</form>
+		<% } else { %>
+		<form
+			id="formUnLike"
+			action="/likes/<%= post[0].post_id %>/users/<%= user.id %>/delete"
+			method="POST"
+		>
+			<button
+				type="submit"
+				id="unlikeButton"
+				form="formUnLike"
+				class="btn btn-primary"
+			>
+				UnLike
+			</button>
+		</form>
+		<% } %>
 	</div>
 
 	<ul class="list-group list-group-flush">
@@ -73,17 +125,18 @@
 <div>
 	<br />
 	<h5><%= comments[i].name %></h5>
-	<p><%= comments[i].text %></p>
+	<span><%= comments[i].text %></span>
+	<% if (comments[i].id === user.id) { %>
 	<button
 		type="button"
-		class="btn btn-danger"
+		class="btn btn-danger btn-sm"
 		data-bs-toggle="modal"
 		data-bs-target="#deleteComment"
 		style="position: absolute; right: 20px"
 	>
 		Delete
 	</button>
-	<%- include ("modals/deleteComment", {i: i}) %>
+	<%- include ("modals/deleteComment", {i: i}) %> <% } %>
 </div>
 <% } %>
 <br />
@@ -133,3 +186,4 @@
 <% } %>
 
 <script src="/javascripts/char-comment.js"></script>
+<script src="/javascripts/sensitive.js"></script>

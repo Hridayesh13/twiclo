@@ -1,0 +1,41 @@
+<h1 class="mt-5">Likes</h1>
+
+<div class="form-group">
+	<% if(!userlikes.includes(post_id)) { %>
+	<form
+		id="formLike"
+		action="/likes/<%= post_id %>/users/<%= user.id %>"
+		method="POST"
+	>
+		<button
+			type="submit"
+			id="likeButton"
+			form="formLike"
+			class="btn btn-primary"
+		>
+			Like
+		</button>
+	</form>
+	<% for(let i=0; i < likes.length; i++) {%>
+	<p class="lead mb-3"><%- likes[i].username %></p>
+	<% } %> <% } else { %>
+	<p class="lead mb-3"><%- user.name %></p>
+	<form
+		id="formUnLike"
+		action="/likes/<%= post_id %>/users/<%= user.id %>/delete"
+		method="POST"
+	>
+		<button
+			type="submit"
+			id="unlikeButton"
+			form="formUnLike"
+			class="btn btn-primary"
+		>
+			UnLike
+		</button>
+	</form>
+	<% for(let i=0; i < likes.length; i++) {%> <% if(user.id == likes[i].id)
+	continue; %>
+	<p class="lead mb-3"><%- likes[i].name %></p>
+	<% } %> <% } %>
+</div>

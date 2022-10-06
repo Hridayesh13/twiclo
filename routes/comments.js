@@ -9,8 +9,8 @@ router.get("/:post_id", ensureAuthenticated, async (req, res) => {
 	try {
 		// res.send(req.params);
 		let sql1 = `SELECT a.*, b.name, b.id
-					FROM posts a, users b
-					WHERE a.author_id = b.id AND a.post_id = ${req.params.post_id}`;
+		FROM posts a, users b
+		WHERE a.author_id = b.id AND a.post_id = ${req.params.post_id}`;
 
 		let post = await db.query(sql1).catch((e) => {
 			throw e;
@@ -22,6 +22,17 @@ router.get("/:post_id", ensureAuthenticated, async (req, res) => {
 			throw e;
 		});
 
+		let sql3 = `SELECT post_id FROM likes WHERE user_id=${req.user.id} ORDER BY post_id DESC`;
+
+		let likes = await db.query(sql3).catch((e) => {
+			throw e;
+		});
+
+		let userlikes = [];
+		for (let i = 0; i < likes.length; i++) {
+			userlikes.push(likes[i].post_id);
+		}
+
 		const numOfResults = comments.length;
 
 		if (numOfResults === 0) {
@@ -29,6 +40,7 @@ router.get("/:post_id", ensureAuthenticated, async (req, res) => {
 				user: req.user,
 				post: post,
 				comments: comments,
+				userlikes: userlikes,
 				page: 1,
 				iterator: 1,
 				endingLink: 1,
@@ -53,7 +65,7 @@ router.get("/:post_id", ensureAuthenticated, async (req, res) => {
 			const startingLimit = (page - 1) * resultsPerPage;
 
 			//Get the relevant number of POSTS for this starting page
-			sql = `SELECT a.*, b.name, b.id
+			let sql = `SELECT a.*, b.name, b.id
 					FROM comments a, users b
 					WHERE a.author_id = b.id AND a.post_id = ${req.params.post_id}
 					ORDER BY a.created_at DESC
@@ -72,6 +84,7 @@ router.get("/:post_id", ensureAuthenticated, async (req, res) => {
 					user: req.user,
 					post: post,
 					comments: result,
+					userlikes: userlikes,
 					page,
 					iterator,
 					endingLink,
