@@ -177,6 +177,15 @@ router.get("/:id", ensureAuthenticated, (req, res) => {
 	});
 });
 
+const cloudinary = require("cloudinary");
+require("dotenv").config();
+
+cloudinary.config({
+	cloud_name: process.env.CLOUD_NAME,
+	api_key: process.env.CLOUD_API_KEY,
+	api_secret: process.env.CLOUD_SECRET_KEY,
+});
+
 router.post(
 	"/:id/posts/:postId/delete",
 	ensureAuthenticated,
@@ -191,15 +200,24 @@ router.post(
 			throw err;
 		});
 
-		let sql = `DELETE FROM posts WHERE post_id=${req.params.postId}`;
-		db.query(sql, async (err) => {
+		let sql3 = `SELECT public_id FROM posts WHERE post_id=${req.params.postId}`
+		db.query(sql3, (err,result)=>{
 			if (err) throw err;
-			console.log("deleted successfully");
-			req.flash("success_msg", "Post Deleted");
-			res.redirect(`/users/${req.params.id}`);
-		});
-	}
-);
+			console.log(result);
+			if (result[0].public_id != 'NULL') {
+				cloudinary.v2.uploader.destroy(result[0].public_id, (err, result)=>{
+					if (err) throw err;
+					let sql = `DELETE FROM posts WHERE post_id=${req.params.postId}`;
+					db.query(sql, async (err) => {
+						if (err) throw err;
+						console.log("deleted successfully");
+						req.flash("success_msg", "Post Deleted");
+						res.redirect(`/users/${req.params.id}`);
+					});
+				})
+			}
+		})
+	});
 
 router.post("/delete_user", ensureAuthenticated, (req, res, next) => {
 	let sql = `UPDATE users
