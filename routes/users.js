@@ -201,21 +201,20 @@ router.post(
 		});
 
 		let sql3 = `SELECT public_id FROM posts WHERE post_id=${req.params.postId}`
-		db.query(sql3, (err,result)=>{
+		db.query(sql3, async (err,result)=>{
 			if (err) throw err;
-			console.log(result);
-			if (result[0].public_id != 'NULL') {
-				cloudinary.v2.uploader.destroy(result[0].public_id, (err, result)=>{
+			if (result[0].public_id) {
+				await cloudinary.v2.uploader.destroy(result[0].public_id, (err, result)=>{
 					if (err) throw err;
-					let sql = `DELETE FROM posts WHERE post_id=${req.params.postId}`;
-					db.query(sql, async (err) => {
-						if (err) throw err;
-						console.log("deleted successfully");
-						req.flash("success_msg", "Post Deleted");
-						res.redirect(`/users/${req.params.id}`);
-					});
 				})
 			}
+			let sql = `DELETE FROM posts WHERE post_id=${req.params.postId}`;
+			db.query(sql, async (err) => {
+				if (err) throw err;
+			});
+			console.log("deleted successfully");
+			req.flash("success_msg", "Post Deleted");
+			res.redirect(`/users/${req.params.id}`);
 		})
 	});
 
