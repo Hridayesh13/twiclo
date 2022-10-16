@@ -111,12 +111,14 @@ router.post("/post", ensureAuthenticated, async (req, res, next) => {
 			await cloudinary.v2.uploader
 				.upload(files.image.filepath)
 				.then((result) => {
-					console.log("media uploaded", result);
+					console.log("media uploaded");
 					image_url = result.url;
+					publicId = result.public_id;
 				});
 			newPost = {
 				text: post_Text,
 				media: image_url,
+				public_id: publicId,
 				author_id: req.user.id,
 				possibly_sensitive: possibly_sensitive,
 			};
