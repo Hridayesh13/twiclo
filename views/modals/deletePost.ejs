@@ -1,6 +1,6 @@
 <div
 	class="modal fade text-black"
-	id="deletePost"
+	id="deletePost<%-i%>"
 	tabindex="-1"
 	aria-hidden="true"
 >
@@ -22,7 +22,7 @@
 				</p>
 				<div class="form-group">
 					<form
-						id="formDeletePost"
+						id="formDeletePost<%-i%>"
 						action="/users/<%= user.id %>/posts/<%= posts[i].post_id %>/delete"
 						method="POST"
 					></form>
@@ -31,8 +31,9 @@
 			<div class="modal-footer">
 				<button
 					type="submit"
-					form="formDeletePost"
+					form="formDeletePost<%-i%>"
 					class="btn btn-danger"
+					id="DeletePost<%-i%>"
 				>
 					Delete
 				</button>

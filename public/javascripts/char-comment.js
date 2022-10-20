@@ -20,7 +20,7 @@ textArea.addEventListener("keyup", (event) => {
 		characterCounter.style.color = "orange";
 		document.getElementById("postButton").disabled = false;
 	} else {
-		characterCounter.style.color = "black";
+		characterCounter.style.color = "white";
 		document.getElementById("postButton").disabled = false;
 	}
 });
