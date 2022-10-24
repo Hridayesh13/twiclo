@@ -33,7 +33,7 @@
 	<h3 class="card-header">
 		<a href="/users/<%= posts[i].id %>"><%= posts[i].name %></a></h3>
 	<% if (posts[i].possibly_sensitive) { %>
-		<div class="card-body" id="postContent" style="filter: blur(10px);">
+		<div class="card-body" id="postContent<%- i %>" style="filter: blur(10px);">
 			<h4 class="card-text"><%= posts[i].text %></h4>
 
 			<% if (posts[i].media) { %>	
@@ -47,7 +47,7 @@
 			<label class="form-check-label" for="flexSwitchCheckDefault">Show sensitive content</label>
 		  </div>
 	<% } else { %>
-		<div class="card-body">
+		<div class="card-body" id="postContent<%- i %>">
 			<h4 class="card-text"><%= posts[i].text %></h4>
 			<% if (posts[i].media) { %>	
 				<img src="https://images.weserv.nl/?url=<%= posts[i].media %>&w=500&h=500&fit=inside" alt="" srcset="">
@@ -91,9 +91,10 @@
 	</div>
 	
 	<ul class="list-group list-group-flush">
-		<li class="list-group-item"><span><%= posts[i].nLikes %></span><a href="/likes/<%= posts[i].post_id %>" display: block height: 100% > 
-		Likes</a> </li>
-		<li class="list-group-item"><span><%= posts[i].nComments %></span><a href="/comments/<%= posts[i].post_id %>" display: block height: 100% > Comments</a></li>
+		<li class="list-group-item"><span><%= posts[i].nLikes %> </span>
+			<!-- <a href="/likes/<%= posts[i].post_id %>" display: block height: 100% > Likes</a>  -->
+		Likes</li>
+		<li class="list-group-item"><span><%= posts[i].nComments %> </span><a href="/comments/<%= posts[i].post_id %>" display: block height: 100% > Comments</a></li>
 	  </ul>
 		
 	<div class="card-footer text-muted">

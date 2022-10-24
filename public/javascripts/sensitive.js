@@ -1,17 +1,14 @@
-let checkbox = document.querySelectorAll(
-	"#showBtn0",
-	"#showBtn1",
-	"#showBtn2",
-	"#showBtn3",
-	"#showBtn4"
-);
+function sensitive(checkbox, i) {
+	if (checkbox.checked) {
+		document.getElementById(`postContent${i}`).removeAttribute("style");
+	} else {
+		document.getElementById(`postContent${i}`).style.filter = "blur(10px)";
+	}
+}
 
-for (let i = 0; i < checkbox.length; i++) {
-	checkbox[i].addEventListener("change", (event) => {
-		if (checkbox[i].checked) {
-			document.getElementById("postContent").removeAttribute("style");
-		} else {
-			document.getElementById("postContent").style.filter = "blur(10px)";
-		}
-	});
+for (let i = 0; i < 5; i++) {
+	let checkbox = document.querySelector(`#showBtn${i}`);
+	if (typeof checkbox !== null) {
+		checkbox.addEventListener("change", sensitive.bind(this, checkbox, i));
+	}
 }
